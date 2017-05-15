@@ -8,7 +8,7 @@ Projeto Casa Sustentavel: Climatizador de AR
 https://github.com/marceloh220/Climatizador.git
 
 Codigo fonte e bibliotecas disponiveis em:
-https://github.com/marceloh220/ClimatizadorFontes.git
+https://github.com/marceloh220/ClimatizadorFontes/archive/master.zip
 
 Esquematicos do projeto em formato PDF (Apenas leitura) e DSN (simulação Proteus 7.7)
 https://github.com/marceloh220/Climatizador/tree/master/Schematics
