@@ -140,8 +140,8 @@ timer_t temporizacao;
 //Para medir volume de agua no reservatorio
 class Volume {
   public:
-    float     milimetros, centimetros, metros;
-    float     litros, centilitros, mililitros;
+    float     metros;
+    float     litros, metrocubico;
     uint8_t   testes;
 };
 Volume reservatorio;

@@ -4,7 +4,7 @@
   E-mail: marceloh220@hotmail.com
   Data: 5, abr. 2017
   Ultima Revisao: 20, mai. 2017
-  Revisao Atual: 27, mai. 2017
+  Revisao Atual: 16, jun. 2017
   Copyright (c) 2017 Marcelo Henrique Moraes
 
   Projeto Casa Sustentavel: Climatizador de AR
@@ -132,7 +132,7 @@ const uint8_t graus[8] PROGMEM =
 
 //Para temporizacoes
 typedef struct Time {
-  uint32_t ms2, ms10, ms60, ms500, s1, s30, m1, m5;
+  uint32_t ms2, ms10, ms60, ms500, s2, s30, m1, m5;
   uint32_t testes;//para testes gerais com temporizacoes
 } timer_t;
 timer_t temporizacao;
@@ -140,8 +140,9 @@ timer_t temporizacao;
 //Para medir volume de agua no reservatorio
 class Volume {
   public:
-    float     milimetros, centimetros, metros;
-    float     litros, centilitros, mililitros;
+    float     milimetros, metros;
+    float     mmCubico, mCubico;
+    float     mililitros, litros;
     uint8_t   testes;
     uint8_t   overflow;
     uint32_t  pulso;
@@ -294,10 +295,11 @@ void loop() {
     serial.println(encoder.posicao());
   */
 
+  temperatura.atualiza();                           //Atualiza as leituras de temperatura
+
   //Tarefa realizada a cada 10 milisegundo
   if ( (timer.millis() - temporizacao.ms10) >= 10) {  //Testa se passou 10ms
 
-    temperatura.atualiza();                           //Atualiza as leituras de temperatura
     acionamentos();                                   //Chama funcao de acoes de controle
     mostra[mostraPTR]();                              //Chama funcao alocada na posicao do ponteiro mostra
 
@@ -332,8 +334,8 @@ void loop() {
 
   }//fim da tarefa de 500ms
 
-  //Tarefa realizada a cada 1 segundo
-  if ( (timer.millis() - temporizacao.s1) >= 1000) {  //Testa se passou 1 segundo
+  //Tarefa realizada a cada 2 segundo
+  if ( (timer.millis() - temporizacao.s2) >= 2000) {  //Testa se passou 1 segundo
 
     medirVolume();  //Atualiza a leitura de volume do reservatorio
 
@@ -349,9 +351,9 @@ void loop() {
 
     controle.sinalizar(); //chama a sinalizacao para o nivel de agua
 
-    temporizacao.s1 = timer.millis(); //Salva o tempo atual para nova tarefa apos 1s
+    temporizacao.s2 = timer.millis(); //Salva o tempo atual para nova tarefa apos 2s
 
-  }//fim da tarefa de 1s
+  }//fim da tarefa de 2s
 
   //Tarefa realizada a cada 30 segundo
   if ( (timer.millis() - temporizacao.s30) >= 30000) {  //Testa se passou 30 segundo
