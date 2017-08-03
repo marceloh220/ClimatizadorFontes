@@ -31,7 +31,22 @@
 
 ***************************************************************************************************************************/
 
+// === Temporizacoes e leitura do controle remoro ===
+
+void timer0OVF() {
+  static uint8_t aux;
+
+  aux++;
+
+  if(aux == 20) {
+    aux = 0;
+    temporizacao.millis++;
+  }
+  
+}
+
 // === Controle do motor de passo ===
+
 //interrupcao de overflow do timer 2
 void motorPasso()
 {
@@ -191,10 +206,6 @@ void motorPasso()
 
 }//fim da interrupcao motorPasso
 
-
-// === Captura do sensor de nivel do reservatorio ===
-//futuramente o sensor de nivel sera medido com uma captura do timer 1
-
 // === WDT resetou o MCU ===
 
 void resetWDT()
@@ -219,6 +230,8 @@ void desligamentoProgramado()
     temporizacao.ms500 = timer.millis();  //faz com que o desligamento programado acontece nos proximos 500ms (debounce)
   }
 
+  while(!digital.read(2));    //aguarda o botao ser solto
+
 }
 
 //interrupcao para ligamento
@@ -226,6 +239,9 @@ void ligamentoProgramado()
 {
 
   sleep.disable(SLEEP);  //acorda a cpu
+  
+  while(!digital.read(2));    //aguarda o botao ser solto
+  
   wdt.config(RESET);     //configura o watch dog timer (WDT) para resetar o MCU
   wdt.timeout(W_16MS);   //configura o estouro do WDT no menor tempo possivel
   wdt.enable();          //habilita o WDT

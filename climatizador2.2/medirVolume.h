@@ -80,7 +80,7 @@ void medirVolume() {
   // === aciona sensor ultrassom ===
   digital.mode(pinTrigger, OUTPUT);
   digital.mode(pinEcho, INPUT);
-  
+
   digital.write(pinTrigger, OFF);
   delay.us(2);
   digital.write(pinTrigger, ON);
@@ -110,9 +110,6 @@ void medirVolume() {
   */
 
   reservatorio.milimetros = reservatorio.pulso * 0.0106340625;
-  serial.print("Distancia: ");
-  serial.print(reservatorio.milimetros);
-  serial.println(" mm");
 
   //m = mm * 10e-3
   reservatorio.metros = reservatorio.milimetros / 1000;
@@ -132,12 +129,24 @@ void medirVolume() {
   reservatorio.mililitros = reservatorio.mCubico;
   reservatorio.litros = reservatorio.mCubico / 1000;
   
+  serial.print("Volume do resevatório: ");
+  serial.print(reservatorio.litros);
+  serial.print(" L");
 
-  if ( reservatorio.litros < nivelMIN )		    //Se o nivel de agua esta abaixo do predeterminado
-    controle.reservatorio(NBAIXO);			          //Indica nivel baixo do reservatorio
+  if ( reservatorio.litros < nivelMIN )	{  //Se o nivel de agua esta abaixo do predeterminado
+    
+    controle.reservatorio(NBAIXO);  //Indica nivel baixo do reservatorio
+    serial.println(" BAIXO");
+    serial.println("Abasteça o reservatório com água");
+    
+  }
 
-  else if ( reservatorio.litros > nivelMED )	//Se o nivel de agua esta acima do predeterminado
-    controle.reservatorio(NALTO);			            //Indica nivel alto do reservatorio
+  else if ( reservatorio.litros > nivelMED ) {  //Se o nivel de agua esta acima do predeterminado
+    
+    controle.reservatorio(NALTO);  //Indica nivel alto do reservatorio
+    serial.println(" BOM");
+    
+  }
 
 }//fim da funcao medirVolume
 

@@ -88,7 +88,7 @@
 #define nivelMED                  2.8
 
 //caracteristicas do reservatorio (mm)
-#define alturaReservatorio        208.26
+#define alturaReservatorio        207.75
 #define comprimentoReservatorio   255
 #define larguraReservatorio       210
 
