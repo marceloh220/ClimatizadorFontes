@@ -42,7 +42,7 @@ void desligamento() {
   //para varias coisas do sistema
 
   controle.parada();        //para todos os atuadores
-  display.background(OFF);  //desliga luz de fundo do display
+  display.backlight(OFF);  //desliga luz de fundo do display
   display.display(OFF);     //desliga o display
 
   wdt.disable();      //desabilita o WDT

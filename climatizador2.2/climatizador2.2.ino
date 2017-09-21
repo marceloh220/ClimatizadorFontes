@@ -3,8 +3,8 @@
   Autor: Marcelo Henrique Moraes
   E-mail: marceloh220@hotmail.com
   Data: 5, abr. 2017
-  Ultima Revisao: 16, jun. 2017
-  Revisao Atual: 3, ago. 2017
+  Ultima Revisao: 3, ago. 2017
+  Revisao Atual: 21, set. 2017
   Copyright (c) 2017 Marcelo Henrique Moraes
 
   Projeto Casa Sustentavel: Climatizador de AR
@@ -50,7 +50,7 @@
 //Implementacao das classes separadas em arquivos
 #include "classes/teclado.h"
 #include "classes/controle.h"
-#include "classes/temperatura.h"
+#include "classes/CLZD01.h"
 #include "classes/relogio.h"
 #include "classes/passo.h"
 
@@ -229,7 +229,7 @@ External external;  //Interrupcao externa para acionamento e desacionamento no m
 
 IHM8574 display(displayADDRESS);                        //Display 16x2 com ci PCF8574
 Relogio relogio(pt_br);                                 //Relogio RTC com dispositivo DS3231, semana e mes em pt_br
-Temperatura temperatura(pinLM35, 30);                   //Temperaturas com sensor de temperatura do DS3231 e LM35, media de 30 leituras analogicas
+CLZD temperatura(pinClzdData, pinClzdClock);            //Temperaturas com sensor CLZD01
 Controle controle(relayADDRESS, INVERSO);               //Controle dos atuadores com logica inversa (dreno de corrente)
 Teclado teclado(pinTeclado);                            //Leitura do teclado analogico
 Passo passo(motorPA, motorPB, motorPC, motorPD, ANODO); //Motor de passo da movimentacao das paletas horizontais em modo de ANODO comum
@@ -243,7 +243,7 @@ Passo passo(motorPA, motorPB, motorPC, motorPD, ANODO); //Motor de passo da movi
 void setup() {
 
   //Liga o background do display, talves algum dia mude o nome de background para backlight...
-  display.background(ON);
+  display.backlight(ON);
 
   //escreve uma apresentacao
   display.print("  Climatizador  ");
@@ -304,8 +304,6 @@ void loop() {
 
   //Tarefa realizada a cada 10 milisegundo
   if ( (temporizacao.millis - temporizacao.ms10) >= 10) {  //Testa se passou 10ms
-
-    temperatura.atualiza();                           //Atualiza as leituras de temperatura
 
     acionamentos();                                   //Chama funcao de acoes de controle
     mostra[mostraPTR]();                              //Chama funcao alocada na posicao do ponteiro mostra
@@ -383,7 +381,7 @@ void loop() {
   //Tarefa realizada a cada 1 minuto
   if ( (temporizacao.millis - temporizacao.m1) >= 60000) { //Testa se passou 1min
 
-    display.background(OFF);  //desliga a luz de fundo do display
+    display.backlight(OFF);  //desliga a luz de fundo do display
 
     temporizacao.s30 = temporizacao.millis;  //Salva o tempo atual para nova tarefa apos 1min
 
@@ -403,7 +401,7 @@ void loop() {
   //se aconteceu alguma acao no teclado ou sistema em modo manutencao
   if (teste.ifset(acteclado) || teste.ifset(manutencao)) {
     teste.clear(acteclado);
-    display.background(ON);
+    display.backlight(ON);
 
     //impede que as tarefas de 30 segundos, 1 minuto e 5 minutos sejam realizadas
     temporizacao.s30 = temporizacao.millis;  //impede a mudança do display

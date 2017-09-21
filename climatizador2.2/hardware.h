@@ -41,13 +41,12 @@
       D10/D11: Leitura de encoder rotativo em modo de quadratura
       D12: Botao tactil do encoder de quadratura
       D13: Led de sinalizacao de MCU em modo de baixo consumo
-      A2: Leitura analogica do sensor de temperatura LM35
       A3: Leitura analogica de teclado de 8 teclas montado com divisores de tensao
       A4/A5: Barramento de TWI (Two-Wire Interface), comunicacao com expansores de ports PCF8574 e dispositivo RTC (Real Time Clock) DS3231
       PC6: Reset do sistema
       PB6(X1)/PB7(X2): Cristal oscilador 16MHz
-      A0: Entrada Analogica/ IO Digital livre
-      A1: Entrada Analogica/ IO Digital livre
+      A0: Entrada Digital de dados para dispositivo CLZD01
+      A1: Saida digital de clock para dispositivo CLZD01
 
     Perifericos:
       BOD: 2.7V (Brown-Out Detection), reinicia se tensao de alimentacao ficar inferior a 2.7V
@@ -100,7 +99,9 @@
 
 //pinos analogicos
 #define pinTeclado          A3  //pino de leitura do teclado analogico
-#define pinLM35             A2  //pino de leitura do sensor de temperatura LM35
+#define pinClzdData         14  //pino de dados para leitura do sensor CLZD01
+#define pinClzdClock        15  //pino de clock para leitura do sensor CLZD01
+
 
 //pinos do sensor de nivel de agua do reservatorio
 #define pinTrigger           9  //pino trigger do sensor de nivel ultrassonico

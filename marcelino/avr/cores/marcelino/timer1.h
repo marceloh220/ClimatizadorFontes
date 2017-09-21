@@ -18,6 +18,7 @@
 #define TIMER1_H
 
 #include "defines.h"
+#include "digital.h"
 
 class Timer1 {
 private:
@@ -26,6 +27,7 @@ private:
 	void variable(uint8_t mode, uint8_t top);
 public:
 	Timer1();
+	~Timer1() { PRR |= (1<<PRTIMER1); }
 	
 	//configs of timer
 	void config(uint8_t mode, uint8_t mode2 = FAST, uint8_t top = CAPT);
@@ -54,14 +56,14 @@ public:
 	void period(uint32_t micros);
 	
 	//interrupts of timer
-	void attach(uint8_t interrupt, void (*funct)(void));
-	void attach(uint8_t interrupt, uint8_t mode, void (*funct)(void));
+	void volatile attach(uint8_t interrupt, void (*funct)(void));
+	void volatile attach(uint8_t interrupt, uint8_t mode, void (*funct)(void));
 	void detach(uint8_t interrupt);
 	
 	//test states
 	inline uint8_t rising() { return (TCCR1B & (1<<ICES1)); }
 	inline uint8_t falling() { return !(TCCR1B & (1<<ICES1)); }
-	inline uint8_t attach() { return TIMSK1; }
+	uint8_t attached(uint8_t interrupt = ANY);
 		
 };
 

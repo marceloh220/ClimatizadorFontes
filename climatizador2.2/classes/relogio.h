@@ -325,6 +325,10 @@ public:
 
 	}//fim do metodo ano
 
+	float temperatura() {
+		return DS3231::temp();
+	}
+
 };
 
 
