@@ -306,7 +306,6 @@ void loop() {
   if ( (temporizacao.millis - temporizacao.ms10) >= 10) {  //Testa se passou 10ms
 
     acionamentos();                                   //Chama funcao de acoes de controle
-    mostra[mostraPTR]();                              //Chama funcao alocada na posicao do ponteiro mostra
 
     temporizacao.ms10 = temporizacao.millis;               //Salva o tempo atual para nova tarefa apos 10ms
 
@@ -326,6 +325,8 @@ void loop() {
 
   //Tarefa realizada a cada 500 milisegundo
   if ( (temporizacao.millis - temporizacao.ms500) >= 500) {  //Testa se passou 500ms
+
+    mostra[mostraPTR]();                              //Chama funcao alocada na posicao do ponteiro mostra
 
     //verifica se foi requerido entrada em modo de baixo consumo
     if (teste.ifset(progOFF)) {
