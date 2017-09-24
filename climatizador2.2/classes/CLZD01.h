@@ -18,18 +18,16 @@ class CLZD: private Digital {
     }
 
     void com() {
-      uint16_t aux = 0;
-      uint8_t j = 9;
-      for (int i = 0; i < 10; i++) {
+      uint16_t volatile aux = 0;
+      for (int i = 0x0200; i; i = i >> 1) {
         this->pulse();
         if (Digital::read(data)) {
           _delay_us(1);
           if (Digital::read(data)) {
-            aux |= (1 << j);
+            aux |= i;
             this->paridade++;
           }
         }
-        j--;
       }
       this->pulse();
       this->paridade %= 2;
