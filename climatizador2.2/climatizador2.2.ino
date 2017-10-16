@@ -281,7 +281,7 @@ void setup() {
   external.attach(INT0, FALLING, desligamentoProgramado);
 
   //configuracao do timer 0  para gerar constantes de tempo de 50us
-  timer.config(NORMAL);           //timer0 em modo normal de 8 bits, sem pwm
+  timer.configure(NORMAL);           //timer0 em modo normal de 8 bits, sem pwm
   timer.period(50);               //overflow do timer0 configurado para ocorrer a cada 50us
   timer.attach(OVF, timer0OVF);  //funcao timer0_OVF anexada na interrupcao de overflow do timer0
 

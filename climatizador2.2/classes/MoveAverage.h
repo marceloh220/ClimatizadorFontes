@@ -1,5 +1,5 @@
-#ifndef _MOVEAVERAGE_H
-#define _MOVEAVERAGE_H
+#ifndef _MOVINGAVERAGE_H
+#define _MOVINGAVERAGE_H
 
 /**************************************************************************************************************************
 
@@ -33,17 +33,16 @@
 
 //Class Analog in core Marcelino
 #include <analog.h>
-#include <serial.h>
 
-#ifndef MoveAverageMAX_READS
-#define MoveAverageMAX_READS 50
+#ifndef MovingAverageMAX_READS
+#define MovingAverageMAX_READS 50
 #endif
 
-struct MoveAverage : private Analog, private Serial {
+struct MoveingAverage : private Analog, private Serial {
 
 private:
 	uint8_t reference;
-	uint16_t _analog[MoveAverageMAX_READS];
+	uint16_t _analog[MovingAverageMAX_READS];
 	uint16_t _total;
 	uint16_t _interator;
 	uint16_t _average;
@@ -53,8 +52,8 @@ private:
 public:
 	
 	MoveAverage(uint8_t pin = A0, uint8_t reads = 20, uint8_t ref = DEFAULT) {
-		if (reads > MoveAverageMAX_READS)
-			this->_reads = MoveAverageMAX_READS;
+		if (reads > MovingAverageMAX_READS)
+			this->_reads = MovingAverageMAX_READS;
 		else
 			this->_reads = reads;
 		for (uint16_t i = 0; i < this->_reads; i++)

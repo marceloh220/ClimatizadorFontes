@@ -227,7 +227,7 @@ void desligamentoProgramado()
     teste.set(progOFF);        //indica um desligamento programado
     external.detachINT(INT0);  //desativa a interrupcao INT0
   
-    temporizacao.ms500 = timer.millis();  //faz com que o desligamento programado acontece nos proximos 500ms (debounce)
+    temporizacao.ms500 = temporizacao.millis;  //faz com que o desligamento programado acontece nos proximos 500ms (debounce)
   }
 
   while(!digital.read(2));    //aguarda o botao ser solto

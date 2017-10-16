@@ -57,7 +57,7 @@ void capturaVolume() {
     captura.detach(CAPT);   //desanexa a captura da interrupcao
 
     //salva o valor capturado
-    reservatorio.pulso = captura.capt() + reservatorio.overflow * 65535;
+    reservatorio.pulso = captura.compC() + reservatorio.overflow * 65535;
 
   }//fim do teste de borda de descida
 
@@ -67,7 +67,7 @@ void capturaVolume() {
 void medirVolume() {
 
   // == prepara o hardware de captura ===
-  captura.config(NORMAL);  //configura o temporizador de captura em modo normal (16bits do timer 1)
+  captura.configure(NORMAL);  //configura o temporizador de captura em modo normal (16bits do timer 1)
 
   //limpa os overflows do temporizador para a proxima captura
   reservatorio.overflow = 0;
