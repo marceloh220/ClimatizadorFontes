@@ -53,14 +53,7 @@
 #include "classes/CLZD01.h"
 #include "classes/relogio.h"
 #include "classes/passo.h"
-
-/*
-   #include "classes/encoder.h"
-   Implementei esta aplicacao para controle do encoder,
-   mas estava tendo problemas durante a leitura por causa do overhead.
-   Entao coloquei a aplicaca direramente na interrupcao do timer2
-   que controla o motor de passo com leitura direta dos ports do motor de passo.
-*/
+#include "classes/encoder.h"
 
 /**************************************************************************************************************************
                                                Prototipo de funcoes auxiliares
@@ -127,6 +120,8 @@ const uint8_t graus[8] PROGMEM =
   0b00000000
 };
 
+#define SimboloGrausAddr  0
+
 /**************************************************************************************************************************
                                                   Variaveis de sistema
 ***************************************************************************************************************************/
@@ -159,43 +154,6 @@ Register teste;
 #define acteclado  4    //flag que indica que ocorreu alguma acao no teclado
 #define progOFF    5    //flag que indica que um desligamento programado foi requisitado
 #define travaEnco  7    //flag que indica que o botao do encoder foi travado, apos o botao do encoder ser pressionado ele precisa ser solto para nova leitura
-
-//Para leitura do encoder e controle do motor de passo da movimentacao das paletas horizontais
-class Encoder {
-  private:
-    //vetor com estados para leitura do encoder em modo de quadratura
-    int8_t estados[16] = { 0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0 };
-    int16_t posicaoEncoder;
-    int16_t posicaoPasso;
-    uint16_t escala;
-  public:
-    //construtor
-    Encoder(uint16_t esc = 1) {
-      escala = esc;
-    }
-    //manipulacao dos atributos
-    inline void encoder(int16_t pos) {
-      posicaoEncoder += estados[pos];
-    }
-    inline void atualiza() {
-      posicaoPasso = (posicaoEncoder >> 2) * escala;
-    }
-    inline int16_t passo() {
-      return posicaoPasso;
-    }
-    inline int16_t posicao() {
-      return posicaoPasso;
-    }
-    inline int16_t posicao(int16_t pos) {
-      posicaoPasso = pos;
-      posicaoEncoder = (pos / 5) | (posicaoEncoder & 0x03);
-    }
-    //teste de condicoes
-    inline uint8_t limite(int16_t min, int16_t max) {
-      return ( posicaoPasso >= min && posicaoPasso <= max );
-    }
-};
-Encoder encoder(encoderEscala);
 
 /**************************************************************************************************************************
                                       Inicializacao dos modulos do core Marcelino
@@ -233,6 +191,7 @@ CLZD temperatura(pinClzdData, pinClzdClock);            //Temperaturas com senso
 Controle controle(relayADDRESS, INVERSO);               //Controle dos atuadores com logica inversa (dreno de corrente)
 Teclado teclado(pinTeclado);                            //Leitura do teclado analogico
 Passo passo(motorPA, motorPB, motorPC, motorPD, ANODO); //Motor de passo da movimentacao das paletas horizontais em modo de ANODO comum
+Encoder encoder(encoderEscala);                         //Controle da leitura do encoder
 
 /**************************************************************************************************************************
                                                    Funcoes principais
@@ -255,7 +214,7 @@ void setup() {
   //Salva caracter do simbolo de graus celcius na posicao 0 da memoria grafica do display
   //display.create(posicao da memoria grafica, linha do simbolo, interador para salvar as oito linhas da matriz)
   for (int i = 0; i < 8; i++)
-    display.create(0, get_pgm(graus, i), i);
+    display.create(SimboloGrausAddr, get_pgm(graus, i), i);
 
   //configura os pinos do reles
   controle.configura(velocidade1, velocidade2, velocidade3, bombaDagua, direcaoVertical, geradorAnion, livre, pinSinalizacao);
